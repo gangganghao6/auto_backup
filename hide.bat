@@ -1,0 +1,1 @@
+node command.js hide

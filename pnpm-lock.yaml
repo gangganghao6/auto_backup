@@ -1,0 +1,15 @@
+lockfileVersion: 5.4
+
+specifiers:
+  node-hide-console-window: ^2.1.1
+
+dependencies:
+  node-hide-console-window: 2.1.1
+
+packages:
+
+  /node-hide-console-window/2.1.1:
+    resolution: {integrity: sha512-6knDFNCPJhgbXF10xJWVJb4COe6pvr4pI6wX4B3g9owErZD7oltrqiZS6wtoAH81dZUZFe6ys+kZDpcsH9nfqw==}
+    os: [win32]
+    requiresBuild: true
+    dev: false

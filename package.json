@@ -1,0 +1,13 @@
+{
+  "name": "backpack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "commonjs",
+  "scripts": {
+    "build:win": "npx pkg ./index.js -t node18-win-x64 -o dist/index.exe"
+  },
+  "dependencies": {
+    "node-hide-console-window": "^2.1.1"
+  }
+}
