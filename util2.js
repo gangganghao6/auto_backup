@@ -1,18 +1,22 @@
 const fs = require('fs');
 const path = require('path');
-const {logDir} = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
 
-function diffBaseFiles(basePath, targetPath, ignoreDirs, ignoreFiles, log) {
+let {logDir: logPath, log} = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
+if (!fs.existsSync(logPath)) fs.mkdirSync(logPath)
+const date = new Date()
+logPath = path.join(logPath, `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.backup_log`)
+
+function diffBaseFiles(basePath, targetPath, ignoreDirs, ignoreFiles) {
     if (!fs.existsSync(basePath)) {
         fs.rmSync(targetPath, {
             force: true,
             recursive: true
         })
-        logFn(`Try delete: ${targetPath}`, log)
+        logFn(`Try delete: ${targetPath}`)
     } else if (fs.lstatSync(basePath).isDirectory() && !isIgnoredDir(basePath, ignoreDirs)) {
         if (!fs.existsSync(targetPath)) {
             fs.mkdirSync(targetPath)
-            logFn(`Create dir: ${targetPath}`, log);
+            logFn(`Create dir: ${targetPath}`);
         }
         const dirs = fs.readdirSync(basePath)
         for (const dir of dirs) {
@@ -21,7 +25,7 @@ function diffBaseFiles(basePath, targetPath, ignoreDirs, ignoreFiles, log) {
     } else if (fs.lstatSync(basePath).isFile() && !isIgnoredFile(basePath, ignoreFiles) && !isIgnoredDir(basePath, ignoreDirs)) {
         if (!fs.existsSync(targetPath) || Math.abs(+fs.lstatSync(basePath).mtime - +fs.lstatSync(targetPath).mtime) > 2000) {
             fs.cpSync(basePath, targetPath)
-            logFn(`Copy file: ${targetPath}`, log);
+            logFn(`Copy file: ${targetPath}`);
         }
     }
 }
@@ -31,7 +35,7 @@ function diffTargetFiles(basePath, targetPath, ignoreDirs, ignoreFiles, log) {
         fs.rmSync(targetPath, {
             recursive: true
         });
-        logFn(`Delete: ${targetPath}`, log);
+        logFn(`Delete: ${targetPath}`);
     } else if (fs.lstatSync(targetPath).isDirectory() && !isIgnoredDir(basePath, ignoreDirs)) {
         const dirs = fs.readdirSync(targetPath)
         for (const dir of dirs) {
@@ -41,20 +45,17 @@ function diffTargetFiles(basePath, targetPath, ignoreDirs, ignoreFiles, log) {
 }
 
 function isIgnoredFile(path, ignores) {
-    return ignores.some((ignore) => new RegExp(`\\\\.*${ignore}$`).test(path))
+    return ignores.some((ignore) => new RegExp(`\\\\.*?${ignore}$`).test(path))
 }
 
 function isIgnoredDir(path, ignores) {
     return ignores.some((ignore) => new RegExp(`\\\\${ignore}$|\\\\${ignore}\\\\`).test(path))
 }
 
-function logFn(msg, log) {
-    console.log(msg)
+function logFn(msg) {
+    const currentDate = new Date();
+    console.log(`${currentDate.toLocaleString()} : ${msg}`)
     if (log) {
-        let logPath = logDir
-        if (!fs.existsSync(logPath)) fs.mkdirSync(logPath)
-        const date = new Date()
-        logPath = path.join(logPath, `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.backup_log`)
         fs.appendFileSync(logPath, `${date.toLocaleString()} : ${msg}\n`, {encoding: 'utf8'})
     }
 }

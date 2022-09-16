@@ -10,8 +10,7 @@
       ],
       "ignoreFiles": [],
       "active": true,
-      "delay": 0,
-      "log": true
+      "delay": 0
     },
     {
       "basePath": "D:\\D学习笔记",
@@ -20,10 +19,10 @@
       ],
       "ignoreFiles": [
       ],
-      "active": false,
-      "delay": 0,
-      "log": true
+      "active": true,
+      "delay": 0
     }
   ],
-  "logDir": "E:\\.backup_log"
+  "logDir": "E:\\.backup_log",
+  "log": true
 }
