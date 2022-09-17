@@ -7,6 +7,6 @@ node command.js quit
 
 ::.\usr.exe forcedstop -d "E:"
 
-::shutdown.exe -s -t 0
+shutdown.exe -s -t 0
 
 pause

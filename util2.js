@@ -8,11 +8,14 @@ logPath = path.join(logPath, `${date.getFullYear()}-${date.getMonth() + 1}-${dat
 
 function diffBaseFiles(basePath, targetPath, ignoreDirs, ignoreFiles) {
     if (!fs.existsSync(basePath)) {
-        fs.rmSync(targetPath, {
-            force: true,
-            recursive: true
-        })
-        logFn(`Try delete: ${targetPath}`)
+        try {
+            fs.rmSync(targetPath, {
+                force: false,
+                recursive: true
+            })
+            logFn(`Delete: ${targetPath}`)
+        } catch {
+        }
     } else if (fs.lstatSync(basePath).isDirectory() && !isIgnoredDir(basePath, ignoreDirs)) {
         if (!fs.existsSync(targetPath)) {
             fs.mkdirSync(targetPath)
@@ -32,10 +35,13 @@ function diffBaseFiles(basePath, targetPath, ignoreDirs, ignoreFiles) {
 
 function diffTargetFiles(basePath, targetPath, ignoreDirs, ignoreFiles, log) {
     if (!fs.existsSync(basePath)) {
-        fs.rmSync(targetPath, {
-            recursive: true
-        });
-        logFn(`Delete: ${targetPath}`);
+        try {
+            fs.rmSync(targetPath, {
+                recursive: true
+            });
+            logFn(`Delete: ${targetPath}`);
+        } catch {
+        }
     } else if (fs.lstatSync(targetPath).isDirectory() && !isIgnoredDir(basePath, ignoreDirs)) {
         const dirs = fs.readdirSync(targetPath)
         for (const dir of dirs) {
